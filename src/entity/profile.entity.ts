@@ -1,10 +1,10 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
 import { User } from './user.entity';
 import { Shelter } from './shelter.entity';
 
 @Entity()
 @Unique(["nickname"])
-export class Profile {
+export class Profile /* extends BaseEntity */ {
     @PrimaryGeneratedColumn()
     id: number
 
@@ -14,7 +14,7 @@ export class Profile {
     @Column()
     password: string
 
-    @Column()
+    @Column({ default: 'none' })
     salt: string
 
     @OneToOne(() => User, { nullable: true })
