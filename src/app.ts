@@ -33,8 +33,6 @@ app.use(morgan('tiny'));
 app.post('/signin', async function (req: Request, res: Response) {
   const nickname = req.body.nickname;
   const password = req.body.password;
-  console.log(`Nickname: ${req.body.nickname}`);
-  console.log(`Password: ${req.body.password}`);
 
   const newProfile = new Profile();
   newProfile.nickname = nickname;
@@ -50,10 +48,14 @@ app.post('/signin', async function (req: Request, res: Response) {
 });
 
 app.post("/login", async function (req: Request, res: Response) {
-  console.log(`Nickname: ${req.body.nickname}`);
-  console.log(`Password: ${req.body.password}`);
+  const nickname = req.body.nickname;
+  const password = req.body.password;
+
+  const profile = await myDataSource.getRepository(Profile).findBy({ nickname, password });
+
   res.json({
-    message: "Done"
+    message: "Done",
+    profile
   });
 });
 
