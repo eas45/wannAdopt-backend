@@ -1,4 +1,4 @@
-import { BaseEntity, Column, CreateDateColumn, DeleteDateColumn, Entity, OneToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from "typeorm";
 import { User } from './user.entity';
 import { Shelter } from './shelter.entity';
 
@@ -18,10 +18,12 @@ export class Profile /* extends BaseEntity */ {
     salt: string
 
     @OneToOne(() => User, { nullable: true })
+    @JoinColumn()
     user: User
 
     @OneToOne(() => Shelter, { nullable: true })
-    shelter: Shelter
+    @JoinColumn()
+    shelter: Shelter;
 
     @CreateDateColumn()
     createdDate: Date
