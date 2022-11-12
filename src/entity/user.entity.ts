@@ -6,16 +6,16 @@ export class User {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({ nullable: true })
     name: string
 
-    @Column()
+    @Column({ nullable: true })
     firstSurname: string
 
-    @Column()
+    @Column({ nullable: true })
     secondSurname: string
 
-    @Column()
+    @Column({ nullable: true })
     dateOfBirth: Date
 
     @OneToOne(() => Profile, (profile) => profile.user)
@@ -30,5 +30,5 @@ export class User {
 
     @DeleteDateColumn()
     deletedDate: Date
-    
+
 }
