@@ -1,10 +1,13 @@
-// import { Shelter } from './entity/shelter.entity';
 import * as express from "express";
 import { Request, Response } from "express";
-import { Profile } from "./entity/profile.entity";
 import { myDataSource } from "./app-data-source";
 import * as cors from 'cors';
 import * as morgan from 'morgan';
+
+// Entities
+import { Profile } from "./entity/profile.entity";
+// import { User } from "./entity/user.entity";
+// import { Shelter } from './entity/shelter.entity';
 
 // establish database connection
 myDataSource
@@ -29,14 +32,17 @@ const options: cors.CorsOptions = {
 app.use(cors(options));
 app.use(morgan('tiny'));
 
-// login routes
 app.post('/signin', async function (req: Request, res: Response) {
   const nickname = req.body.nickname;
   const password = req.body.password;
 
+  // const newUser = new User();
+  // newUser.name = 'a';
+  // await myDataSource.getRepository(User).save(newUser);
   const newProfile = new Profile();
   newProfile.nickname = nickname;
   newProfile.password = password;
+  // newProfile.user = newUser;
   await myDataSource.getRepository(Profile).save(newProfile);
 
   const savedProfile = await myDataSource.getRepository(Profile).findBy({ nickname });
@@ -51,6 +57,11 @@ app.post("/login", async function (req: Request, res: Response) {
   const nickname = req.body.nickname;
   const password = req.body.password;
 
+  if (nickname === '' || password === '') {
+    return res.json({
+      message: "Bad login"
+    });
+  }
   const profile = await myDataSource.getRepository(Profile).findBy({ nickname, password });
 
   res.json({
@@ -63,6 +74,29 @@ app.post("/login", async function (req: Request, res: Response) {
 app.get("/users", async function (req: Request, res: Response) {
   const users = await myDataSource.getRepository(Profile).find()
   res.json(users)
+})
+
+// Consultar usuario
+app.get("/users/:nickname", async function (req: Request, res: Response) {
+  const nickname = req.params.nickname;
+
+  console.log('Buscando información de : ' + nickname);
+
+  // const account = await myDataSource.getRepository(Profile).findOneBy({ nickname });
+  // const account = await myDataSource.getRepository(Profile).createQueryBuilder('profile')
+  const account = await myDataSource.getRepository(Profile).find({
+    relations: {
+      user: true
+    },
+    where: {
+      nickname
+    }
+  });
+
+  res.json({
+    message: 'Done',
+    account
+  })
 })
 
 // Crear usuario
