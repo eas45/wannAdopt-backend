@@ -23,5 +23,11 @@
   "bugs": {
     "url": "https://github.com/eas45/wannAdopt-backend/issues"
   },
-  "homepage": "https://github.com/eas45/wannAdopt-backend#readme"
+  "homepage": "https://github.com/eas45/wannAdopt-backend#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.28.0"
+  }
 }
