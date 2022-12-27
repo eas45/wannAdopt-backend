@@ -8,7 +8,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false
     },
-    salt: Sequelize.STRING
+    salt: {
+      type: Sequelize.STRING,
+      defaulValue: "none"
+    }
   }/* ,
   {
     paranoid: true
