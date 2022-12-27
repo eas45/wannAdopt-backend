@@ -11,12 +11,12 @@ module.exports = (sequelize, Sequelize) => {
     salt: {
       type: Sequelize.STRING,
       allowNull: false,
-      defaulValue: "none"
+      defaultValue: "none"
     }
-  }/* ,
+  },
   {
     paranoid: true
-  } */);
+  });
 
   return Profile;
 };
