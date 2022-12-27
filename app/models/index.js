@@ -5,7 +5,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
   operatorsAliases: false,
-
+  
   pool: {
     max: dbConfig.pool.max,
     min: dbConfig.pool.min,
@@ -21,5 +21,12 @@ db.sequelize = sequelize;
 
 // db.animals = require('./animal.model')(sequelize, Sequelize);
 db.profiles = require('./profile.model')(sequelize, Sequelize);
+db.users = require('./user.model')(sequelize, Sequelize);
+
+db.profiles.hasOne(db.users, {
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE'
+});
+db.users.belongsTo(db.profiles);
 
 module.exports = db;
