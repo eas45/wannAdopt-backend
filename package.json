@@ -1,40 +1,27 @@
 {
-  "name": "tfg",
+  "name": "wannadopt-backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node ./src/app.ts",
-    "start:nodemon": "nodemon"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eas45/TFG.git"
+    "url": "git+https://github.com/eas45/wannAdopt-backend.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "nodejs",
+    "express",
+    "sequelize",
+    "mysql",
+    "rest",
+    "api"
+  ],
+  "author": "Esteban Antón Sellés",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/eas45/TFG/issues"
+    "url": "https://github.com/eas45/wannAdopt-backend/issues"
   },
-  "homepage": "https://github.com/eas45/TFG#readme",
-  "devDependencies": {
-    "@types/cors": "^2.8.12",
-    "@types/morgan": "^1.9.3",
-    "@types/node": "^17.0.38",
-    "morgan": "^1.10.0",
-    "nodemon": "^2.0.20",
-    "ts-node": "^10.8.0",
-    "tslib": "^2.4.0",
-    "typescript": "^4.7.2"
-  },
-  "dependencies": {
-    "@types/express": "^4.17.13",
-    "cors": "^2.8.5",
-    "express": "^4.18.1",
-    "mysql": "^2.18.1",
-    "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.3.6"
-  }
+  "homepage": "https://github.com/eas45/wannAdopt-backend#readme"
 }
