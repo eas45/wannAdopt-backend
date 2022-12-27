@@ -19,6 +19,7 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.animals = require('./animal.model')(sequelize, Sequelize);
+// db.animals = require('./animal.model')(sequelize, Sequelize);
+db.animals = require('./profile.model')(sequelize, Sequelize);
 
 module.exports = db;
