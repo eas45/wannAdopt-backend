@@ -47,31 +47,36 @@ exports.findAll = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error ocurred while retrieving animals."
+          err.message || "Some error ocurred while retrieving profiles."
       });
     });
 };
 
-// Find a single Profile with an id
-exports.findOne = (req, res) => {
-  const id = req.params.id;
+exports._findOne = async (id) => {
+  try {
+    var profile = await Profile.findByPk(id);
+    const status = profile ? 200 : 404;
+    var payload = profile ? profile : { message: `Cannot find Profile with id=${id}.` };
 
-  Profile.findByPk(id)
-    .then(data => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.status(404).send({
-          message: `Cannot find Profile with id=${id}.`
-        });
-      }
-    })
-    .catch(err => {
-      console.log(err.message);
-      res.status(500).send({
-        message: `Error retrieving PRofile with id=${id}.`
-      });
-    });
+    return {
+      status,
+      payload
+    }
+  } catch (err) {
+    console.log(err.message);
+    return {
+      status: 500,
+      payload: { message: `Error retrieving Profile with id=${id}.` }
+    };
+  }
+}
+
+// Find a single Profile with an id
+exports.findOne = async (req, res) => {
+  const id = req.params.id;
+  const response = await this._findOne(id);
+
+  res.status(response.status).send(response.payload);
 };
 
 // Update a Profile by the id in the request
@@ -142,13 +147,37 @@ exports.deleteAll = (req, res) => {
     });
 };
 
+exports._findAllUsers = async () => {
+  try {
+    const payload =
+      await Profile.findAll({
+        include: ['user']
+      })
+      .filter(profile => profile.user);
+
+    return {
+      status: 200,
+      payload
+    };
+  } catch (err) {
+    return {
+      status: 500,
+      payload: {
+        message: err.message ||
+          'Some error ocurred while retrieving all User Profiles'
+      }
+    };
+  }
+}
+
 // Find all user Profiles
 exports.findAllUsers = (req, res) => {
   Profile.findAll({
-    where: { shelterId: null }
+    // where: { shelterId: null }
+    include: ['user']
   })
     .then(data => {
-      res.send(data);
+      res.send(data.filter(d => d.user));
     })
     .catch(err => {
       res.status(500).send({
