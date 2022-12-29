@@ -1,9 +1,15 @@
 module.exports = (sequelize, Sequelize) => {
   const User = sequelize.define('user', {
-    name: Sequelize.STRING,
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
     firstSurname: Sequelize.STRING,
     secondSurname: Sequelize.STRING,
-    dateOfBirth: Sequelize.DATEONLY
+    dateOfBirth: {
+      type: Sequelize.DATEONLY,
+      allowNull: false
+    }
   },
   {
     paranoid: true
