@@ -147,31 +147,33 @@ exports.deleteAll = (req, res) => {
     });
 };
 
-exports._findAllUsers = async () => {
-  try {
-    const payload =
-      await Profile.findAll({
-        include: ['user']
-      })
-      .filter(profile => profile.user);
+// exports._findAllUsers = async () => {
+//   try {
+//     var payload =
+//       await Profile.findAll({
+//         include: ['user']
+//       });
 
-    return {
-      status: 200,
-      payload
-    };
-  } catch (err) {
-    return {
-      status: 500,
-      payload: {
-        message: err.message ||
-          'Some error ocurred while retrieving all User Profiles'
-      }
-    };
-  }
-}
+//     return {
+//       status: 200,
+//       payload: payload.filter(profile => profile.user)
+//     };
+//   } catch (err) {
+//     return {
+//       status: 500,
+//       payload: {
+//         message: err.message ||
+//           'Some error ocurred while retrieving all User Profiles'
+//       }
+//     };
+//   }
+// }
 
 // Find all user Profiles
-exports.findAllUsers = (req, res) => {
+exports.findAllUsers = async (req, res) => {
+  // const response = await this._findAllUsers();
+
+  // return res.status(response.status).send(response.payload);
   Profile.findAll({
     include: ['user']
   })
