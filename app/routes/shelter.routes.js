@@ -3,29 +3,23 @@ module.exports = app => {
 
   var router = require('express').Router();
 
-  // Create a new Profile
+  // Create a new Shelter
   router.post('/', shelters.create);
 
-  // Retrieve all Profiles
-  // router.get('/', profiles.findAll);
+  // Retrieve all Shelters
+  router.get('/', shelters.findAll);
 
-  // // Retrieve all User Profiles
-  // router.get('/users', profiles.findAllUsers);
+  // Retrieve a single Shelter with id
+  router.get('/:id', shelters.findOne);
 
-  // // Retrieve all Shelter Profiles
-  // router.get('/shelters', profiles.findAllShelters);
+  // Update a Shelter with id
+  router.put('/:id', shelters.update);
 
-  // // Retrieve a single Profile with id
-  // router.get('/:id', profiles.findOne);
+  // Delete a Shelter with id
+  router.delete('/:id', shelters.delete);
 
-  // // Update a Profile with id
-  // router.put('/:id', profiles.update);
-
-  // // Delete a Profile with id
-  // router.delete('/:id', profiles.delete);
-
-  // // Delete all Profiles
-  // router.delete('/', profiles.deleteAll);
+  // Delete all Shelters
+  router.delete('/', shelters.deleteAll);
 
   app.use('/api/shelters', router);
 }

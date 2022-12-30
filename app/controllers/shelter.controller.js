@@ -1,10 +1,9 @@
-// const db = require('../models');
-// const User = db.users;
-// const Profile = db.profiles;
+const db = require('../models');
+const Shelter = db.shelters;
 const ProfileController = require('../controllers/profile.controller');
 // const Op = db.Sequelize.Op;
 
-// Create and Save a new User
+// Create and Save a new Shelter
 exports.create = async (req, res) => {
   // Validate request
   if (!req.query.profile) {
@@ -61,117 +60,117 @@ exports.create = async (req, res) => {
     });
   }
 };
-/* 
-// Retrieve all Users from the database.
-exports.findAll = (req, res) => {
-  const email = req.query.email;
-  var condition = email ? { email: { [Op.like]: `%${email}%` } } : null;
 
-  User.findAll({ where: condition })
+// Retrieve all Shelters from the database.
+exports.findAll = (req, res) => {
+  // const cif = req.query.cif;
+  // var condition = cif ? { cif: { [Op.like]: `%${cif}%` } } : null;
+
+  Shelter.findAll(/* { where: condition } */)
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error ocurred while retrieving users."
+          err.message || "Some error ocurred while retrieving shelters."
       });
     });
 };
 
-// Find a single User with an id
+// Find a single Shelter with an id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  User.findByPk(id)
+  Shelter.findByPk(id)
     .then(data => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find User with id=${id}.`
+          message: `Cannot find Shelter with id=${id}.`
         });
       }
     })
     .catch(err => {
       console.log(err.message);
       res.status(500).send({
-        message: `Error retrieving User with id=${id}.`
+        message: `Error retrieving Shelter with id=${id}.`
       });
     });
 };
 
-// Update a User by the id in the request
+// Update a Shelter by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
 
-  User.update(req.body, {
+  Shelter.update(req.body, {
     where: { id: id }
   })
     .then(num => {
       if (num == 1) {
         res.send({
-          message: 'User was updated successfully.'
+          message: 'Shelter was updated successfully.'
         });
       } else {
         res.send({
-          message: `Cannot update User with id=${id}. Maybe User was not found or req.body is empty!`
+          message: `Cannot update Shelter with id=${id}. Maybe Shelter was not found or req.body is empty!`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: `Error updating User with id=${id}`
+        message: `Error updating Shelter with id=${id}`
       });
     });
 };
 
-// Delete a User with the specified id in the request
+// Delete a Shelter with the specified id in the request
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  User.destroy({
+  Shelter.destroy({
     where: { id: id }
   })
     .then(num => {
       if (num == 1) {
         res.send({
-          message: 'User was deleted successfully.'
+          message: 'Shelter was deleted successfully.'
         });
       } else {
         res.send({
-          message: `Cannot delete User with id=${id}. Maybe User was not found or req.body is empty!`
+          message: `Cannot delete Shelter with id=${id}. Maybe Shelter was not found or req.body is empty!`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: `Error deleting User with id=${id}`
+        message: `Error deleting Shelter with id=${id}`
       });
     });
 };
 
-// Delete all Users from the database
+// Delete all Shelters from the database
 exports.deleteAll = (req, res) => {
-  User.destroy({
+  Shelter.destroy({
     where: {},
     truncate: false
   })
     .then(num => {
       res.send({
-        message: `${num} User(s) were deleted succesfully!`
+        message: `${num} Shelter(s) were deleted succesfully!`
       });
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || `Error deleting User with id=${id}`
+        message: err.message || `Error deleting Shelter with id=${id}`
       });
     });
 };
 
-// Find all user Users
-exports.findAllUsers = (req, res) => {
-  User.findAll({
+// Find all shelter Shelters
+exports.findAllShelters = (req, res) => {
+  Shelter.findAll({
     include: ['user']
   })
     .then(data => {
@@ -180,14 +179,14 @@ exports.findAllUsers = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message: err.message ||
-          'Some error ocurred while retrieving all User Users'
+          'Some error ocurred while retrieving all Shelter Shelters'
       });
     });
 };
 
-// Find all shelter Users
+// Find all shelter Shelters
 exports.findAllShelters = (req, res) => {
-  User.findAll({
+  Shelter.findAll({
     include: ['shelter']
   })
     .then(data => {
@@ -196,8 +195,7 @@ exports.findAllShelters = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message: err.message ||
-          'Some error ocurred while retrieving all Shelter Users'
+          'Some error ocurred while retrieving all Shelter Shelters'
       });
     });
 };
- */
