@@ -173,7 +173,6 @@ exports._findAllUsers = async () => {
 // Find all user Profiles
 exports.findAllUsers = (req, res) => {
   Profile.findAll({
-    // where: { shelterId: null }
     include: ['user']
   })
     .then(data => {
@@ -190,10 +189,10 @@ exports.findAllUsers = (req, res) => {
 // Find all shelter Profiles
 exports.findAllShelters = (req, res) => {
   Profile.findAll({
-    where: { UserId: null }
+    include: ['shelter']
   })
     .then(data => {
-      res.send(data);
+      res.send(data.filter(d => d.shelter));
     })
     .catch(err => {
       res.status(500).send({
