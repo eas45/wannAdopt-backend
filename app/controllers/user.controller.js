@@ -1,5 +1,5 @@
-// const db = require('../models');
-// const User = db.users;
+const db = require('../models');
+const User = db.users;
 // const Profile = db.profiles;
 const ProfileController = require('../controllers/profile.controller');
 // const Op = db.Sequelize.Op;
@@ -61,13 +61,13 @@ exports.create = async (req, res) => {
     });
   }
 };
-/* 
+
 // Retrieve all Users from the database.
 exports.findAll = (req, res) => {
-  const email = req.query.email;
-  var condition = email ? { email: { [Op.like]: `%${email}%` } } : null;
+  // const name = req.query.name;
+  // var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
 
-  User.findAll({ where: condition })
+  User.findAll(/* { where: condition } */)
     .then(data => {
       res.send(data);
     })
@@ -168,36 +168,3 @@ exports.deleteAll = (req, res) => {
       });
     });
 };
-
-// Find all user Users
-exports.findAllUsers = (req, res) => {
-  User.findAll({
-    include: ['user']
-  })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message ||
-          'Some error ocurred while retrieving all User Users'
-      });
-    });
-};
-
-// Find all shelter Users
-exports.findAllShelters = (req, res) => {
-  User.findAll({
-    include: ['shelter']
-  })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message ||
-          'Some error ocurred while retrieving all Shelter Users'
-      });
-    });
-};
- */
