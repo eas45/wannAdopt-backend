@@ -129,11 +129,33 @@ exports.update = (req, res) => {
     });
 };
 
+exports._delete = async (id) => {
+  try {
+    const num = User.destroy({
+      where: { id }
+    });
+
+    return {
+      status: 200,
+      payload:
+        num == 1 ?
+          { message: 'User was deleted successfully.' } :
+          { message: `Cannot delete User with id=${id}. Maybe User was not found or req.body is empty!` }
+    }
+  } catch (err) {
+    console.log(err.message);
+    return {
+      status: 500,
+      payload: { message: `Error deleting User with id=${id}` }
+    }
+  }
+}
+
 // Delete a User with the specified id in the request
 exports.delete = async (req, res) => {
   const id = req.params.id;
   const userResponse = await this._findOne(id);
-  
+
   if (userResponse.status == 200) {
     const user = userResponse.payload;
     const profileId = user.profileId;

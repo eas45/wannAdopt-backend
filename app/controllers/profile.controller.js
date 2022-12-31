@@ -1,5 +1,7 @@
 const db = require('../models');
 const Profile = db.profiles;
+const UserController = require('../controllers/user.controller');
+const ShelterController = require('../controllers/shelter.controller');
 const Op = db.Sequelize.Op;
 
 // Create and Save a new Profile
@@ -130,9 +132,39 @@ exports._delete = async (id) => {
 // Delete a Profile with the specified id in the request
 exports.delete = async (req, res) => {
   const id = req.params.id;
-  const response = await this._delete(id);
+  const profileResponse = await this._findOne(id);
 
-  res.status(response.status).send(response.payload);
+  if (profileResponse.status == 200) {
+    const profile = profileResponse.payload;
+
+    const user = await profile.getUser();
+    if (user) {
+      // Borra User
+      const userResponse = await UserController._delete(user.id);
+      
+      if (userResponse.status != 200) {
+        return res.status(userResponse.status).send(userResponse.payload)
+      }
+      console.log(userResponse.payload);
+    }
+
+    const shelter = await profile.getShelter();
+    if (shelter) {
+      // Borra Shelter
+      const shelterResponse = await ShelterController._delete(shelter.id);
+      
+      if (shelterResponse.status != 200) {
+        return res.status(shelterResponse.status).send(shelterResponse.payload)
+      }
+      console.log(shelterResponse.payload);
+    }
+
+    const response = await this._delete(id);
+
+    return res.status(response.status).send(response.payload);
+  }
+
+  res.status(profileResponse.status).send(profileResponse.payload);
 };
 
 // Delete all Profiles from the database
