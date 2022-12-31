@@ -26,6 +26,10 @@ db.animals = require('./animal.model')(sequelize, Sequelize);
 
 // One To One (Profile-User)
 db.profiles.hasOne(db.users, {
+  foreignKey: {
+    allowNull: false,
+    unique: true
+  },
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE'
 });
@@ -33,6 +37,10 @@ db.users.belongsTo(db.profiles);
 
 // One To One (Profile-Shelter)
 db.profiles.hasOne(db.shelters, {
+  foreignKey: {
+    allowNull: false,
+    unique: true
+  },
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE'
 });
@@ -40,13 +48,16 @@ db.shelters.belongsTo(db.profiles);
 
 // One To Many (Shelter-Animal)
 db.shelters.hasMany(db.animals, {
+  foreignKey: {
+    allowNull: false
+  },
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE'
 });
 db.animals.belongsTo(db.shelters);
 
 // Many To Many (User-Animal)
-db.users.belongsToMany(db.animals, {through: 'AnimalUsers'})
-db.animals.belongsToMany(db.users, {through: 'AnimalUsers'});
+db.users.belongsToMany(db.animals, { through: 'AnimalUsers' })
+db.animals.belongsToMany(db.users, { through: 'AnimalUsers' });
 
 module.exports = db;
