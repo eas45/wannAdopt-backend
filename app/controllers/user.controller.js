@@ -151,20 +151,20 @@ exports.delete = (req, res) => {
     });
 };
 
-// Delete all Users from the database
-exports.deleteAll = (req, res) => {
-  User.destroy({
-    where: {},
-    truncate: false
-  })
-    .then(num => {
-      res.send({
-        message: `${num} User(s) were deleted succesfully!`
-      });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message || `Error deleting User with id=${id}`
-      });
-    });
-};
+// // Delete all Users from the database
+// exports.deleteAll = (req, res) => {
+//   User.destroy({
+//     where: {},
+//     truncate: false
+//   })
+//     .then(num => {
+//       res.send({
+//         message: `${num} User(s) were deleted succesfully!`
+//       });
+//     })
+//     .catch(err => {
+//       res.status(500).send({
+//         message: err.message || `Error deleting User with id=${id}`
+//       });
+//     });
+// };
