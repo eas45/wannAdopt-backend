@@ -78,26 +78,31 @@ exports.findAll = (req, res) => {
     });
 };
 
-// Find a single Shelter with an id
-exports.findOne = (req, res) => {
-  const id = req.params.id;
+exports._findOne = async (id) => {
+  try {
+    var shelter = await Shelter.findByPk(id);
+    const status = shelter ? 200 : 404;
+    var payload = shelter ? shelter : { message: `Cannot find Shelter with id=${id}.` };
 
-  Shelter.findByPk(id)
-    .then(data => {
-      if (data) {
-        res.send(data);
-      } else {
-        res.status(404).send({
-          message: `Cannot find Shelter with id=${id}.`
-        });
-      }
-    })
-    .catch(err => {
-      console.log(err.message);
-      res.status(500).send({
-        message: `Error retrieving Shelter with id=${id}.`
-      });
-    });
+    return {
+      status,
+      payload
+    }
+  } catch (err) {
+    console.log(err.message);
+    return {
+      status: 500,
+      payload: { message: `Error retrieving Shelter with id=${id}.` }
+    };
+  }
+}
+
+// Find a single Shelter with an id
+exports.findOne = async (req, res) => {
+  const id = req.params.id;
+  const response = await this._findOne(id);
+
+  return res.status(response.status).send(response.payload);
 };
 
 // Update a Shelter by the id in the request
