@@ -1,8 +1,17 @@
 module.exports = (sequelize, Sequelize) => {
   const Animal = sequelize.define('animals', {
-    name: Sequelize.STRING,
-    breed: Sequelize.STRING,
-    age: Sequelize.INTEGER,
+    name: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    breed: {
+      type: Sequelize.STRING,
+      allowNull: false
+    },
+    age: {
+      type: Sequelize.INTEGER,
+      allowNull: false
+    },
     sex: {
       type: Sequelize.BOOLEAN,
       allowNull: false
