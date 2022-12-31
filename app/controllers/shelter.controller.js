@@ -131,76 +131,58 @@ exports.update = (req, res) => {
 };
 
 // Delete a Shelter with the specified id in the request
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
   const id = req.params.id;
+  const shelterResponse = await this._findOne(id);
+  
+  if (shelterResponse.status == 200) {
+    const shelter = shelterResponse.payload;
+    const profileId = shelter.profileId;
+    const profileResponse = await ProfileController._delete(profileId);
 
-  Shelter.destroy({
-    where: { id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: 'Shelter was deleted successfully.'
+    if (profileResponse.status == 200) {
+      Shelter.destroy({
+        where: { id }
+      })
+        .then(num => {
+          if (num == 1) {
+            res.send({
+              message: 'Shelter was deleted successfully.'
+            });
+          } else {
+            res.send({
+              message: `Cannot delete Shelter with id=${id}. Maybe Shelter was not found or req.body is empty!`
+            });
+          }
+        })
+        .catch(err => {
+          res.status(500).send({
+            message: `Error deleting Shelter with id=${id}`
+          });
         });
-      } else {
-        res.send({
-          message: `Cannot delete Shelter with id=${id}. Maybe Shelter was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: `Error deleting Shelter with id=${id}`
-      });
-    });
+      return;
+    }
+
+    return res.status(profileResponse.status).send(profileResponse.payload);
+  }
+
+  res.status(shelterResponse.status).send(shelterResponse.payload);
 };
 
-// Delete all Shelters from the database
-exports.deleteAll = (req, res) => {
-  Shelter.destroy({
-    where: {},
-    truncate: false
-  })
-    .then(num => {
-      res.send({
-        message: `${num} Shelter(s) were deleted succesfully!`
-      });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message || `Error deleting Shelter with id=${id}`
-      });
-    });
-};
-
-// Find all shelter Shelters
-exports.findAllShelters = (req, res) => {
-  Shelter.findAll({
-    include: ['user']
-  })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message ||
-          'Some error ocurred while retrieving all Shelter Shelters'
-      });
-    });
-};
-
-// Find all shelter Shelters
-exports.findAllShelters = (req, res) => {
-  Shelter.findAll({
-    include: ['shelter']
-  })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: err.message ||
-          'Some error ocurred while retrieving all Shelter Shelters'
-      });
-    });
-};
+// // Delete all Shelters from the database
+// exports.deleteAll = (req, res) => {
+//   Shelter.destroy({
+//     where: {},
+//     truncate: false
+//   })
+//     .then(num => {
+//       res.send({
+//         message: `${num} Shelter(s) were deleted succesfully!`
+//       });
+//     })
+//     .catch(err => {
+//       res.status(500).send({
+//         message: err.message || `Error deleting Shelter with id=${id}`
+//       });
+//     });
+// };

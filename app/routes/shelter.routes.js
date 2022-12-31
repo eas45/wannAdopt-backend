@@ -18,8 +18,8 @@ module.exports = app => {
   // Delete a Shelter with id
   router.delete('/:id', shelters.delete);
 
-  // Delete all Shelters
-  router.delete('/', shelters.deleteAll);
+  // // Delete all Shelters
+  // router.delete('/', shelters.deleteAll);
 
   app.use('/api/shelters', router);
 }
