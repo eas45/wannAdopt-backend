@@ -84,7 +84,7 @@ exports.update = (req, res) => {
   const id = req.params.id;
 
   Profile.update(req.body, {
-    where: { id: id }
+    where: { id }
   })
     .then(num => {
       if (num == 1) {
@@ -104,29 +104,35 @@ exports.update = (req, res) => {
     });
 };
 
-// Delete a Profile with the specified id in the request
-exports.delete = (req, res) => {
-  const id = req.params.id;
-
-  Profile.destroy({
-    where: { id: id }
-  })
-    .then(num => {
-      if (num == 1) {
-        res.send({
-          message: 'Profile was deleted successfully.'
-        });
-      } else {
-        res.send({
-          message: `Cannot delete Profile with id=${id}. Maybe Profile was not found or req.body is empty!`
-        });
-      }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: `Error deleting Profile with id=${id}`
-      });
+exports._delete = async (id) => {
+  try {
+    const num = await Profile.destroy({
+      where: { id }
     });
+
+    return {
+      status: 200,
+      payload:
+        num == 1 ?
+          { message: 'Profile was deleted successfully.' } :
+          { message: `Cannot delete Profile with id=${id}. Maybe Profile was not found or req.body is empty!` }
+    }
+  } catch (err) {
+    return {
+      status: 500,
+      payload: {
+        message: err.message || `Error deleting Profile with id=${id}`
+      }
+    }
+  }
+}
+
+// Delete a Profile with the specified id in the request
+exports.delete = async (req, res) => {
+  const id = req.params.id;
+  const response = await this._delete(id);
+
+  res.status(response.status).send(response.payload);
 };
 
 // Delete all Profiles from the database

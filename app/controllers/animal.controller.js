@@ -100,7 +100,7 @@ exports.update = (req, res) => {
   const id = req.params.id;
 
   Animal.update(req.body, {
-    where: { id: id }
+    where: { id }
   })
     .then(num => {
       if (num == 1) {
@@ -125,7 +125,7 @@ exports.delete = (req, res) => {
   const id = req.params.id;
 
   Animal.destroy({
-    where: { id: id }
+    where: { id }
   })
     .then(num => {
       if (num == 1) {
