@@ -10,19 +10,27 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   if (!req.body.email) {
-    res.status(400).send('Se necesita el usuario y la contraseña para poder iniciar sesión.');
+    return res.status(400).send({
+      message: 'Se necesita el usuario y la contraseña para poder iniciar sesión.'
+    });
   }
+
   const email = req.body.email;
   const password = req.body.password;
+  
   try {
     const profile = await Profile.findOne({
-      where: {email, password}
+      where: { email, password }
     });
+
     return profile ?
-      res.send('OK') :
-      res.status(404).send('Credenciales incorrectas.');
+      res.send({ message: 'Guay' }) :
+      res.status(404).send({ message: 'Credenciales incorrectas.' });
   } catch (err) {
     console.log(err.message);
-    return res.status(500).send('No se pudo iniciar sesión. Por favor, inténtelo más tarde.');
+
+    return res.status(500).send({
+      message: 'No se pudo iniciar sesión. Por favor, inténtelo más tarde.'
+    });
   }
 }
