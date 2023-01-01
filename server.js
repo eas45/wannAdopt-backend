@@ -5,7 +5,8 @@ const db = require("./app/models");
 const app = express();
 
 var corsOptions = {
-  origin: "http://localhost:4200"
+  credentials: true,
+  origin: ["http://localhost:4200"]
 };
 
 app.use(cors(corsOptions));
@@ -79,6 +80,7 @@ app.get("/", (req, res) => {
 
 });
 
+require('./app/routes/auth.routes')(app);
 require('./app/routes/profile.routes')(app);
 require('./app/routes/user.routes')(app);
 require('./app/routes/shelter.routes')(app);
