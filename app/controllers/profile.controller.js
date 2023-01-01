@@ -4,8 +4,7 @@ const UserController = require('../controllers/user.controller');
 const ShelterController = require('../controllers/shelter.controller');
 const Op = db.Sequelize.Op;
 
-// Create and Save a new Profile
-exports.create = (req, res) => {
+exports._create = async (req) => {
   // Validate request
   if (!req.body.email) {
     res.status(400).send({
@@ -15,26 +14,37 @@ exports.create = (req, res) => {
   }
 
   // Create a Profile
-  const profile = {
+  const newProfile = {
     email: req.body.email,
     password: req.body.password,
     salt: req.body.salt ? req.body.salt : undefined
   };
 
   console.log("PROFILE:");
-  console.log(profile);
+  console.log(newProfile);
 
-  // Save Profile in the database
-  Profile.create(profile)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Profile."
-      });
-    });
+  try {
+    const profile = await Profile.create(newProfile);
+
+    return {
+      status: 200,
+      payload: profile
+    }
+  } catch (err) {
+    return {
+      status: 500,
+      payload: {
+        message: err.message || "Some error occurred while creating the Profile."
+      }
+    }
+  }
+}
+
+// Create and Save a new Profile
+exports.create = async (req, res) => {
+  const response = await this._create(req);
+
+  return res.status(response.status).send(response.payload);
 };
 
 // Retrieve all Profiles from the database.
@@ -141,7 +151,7 @@ exports.delete = async (req, res) => {
     if (user) {
       // Borra User
       const userResponse = await UserController._delete(user.id);
-      
+
       if (userResponse.status != 200) {
         return res.status(userResponse.status).send(userResponse.payload)
       }
@@ -152,7 +162,7 @@ exports.delete = async (req, res) => {
     if (shelter) {
       // Borra Shelter
       const shelterResponse = await ShelterController._delete(shelter.id);
-      
+
       if (shelterResponse.status != 200) {
         return res.status(shelterResponse.status).send(shelterResponse.payload)
       }
