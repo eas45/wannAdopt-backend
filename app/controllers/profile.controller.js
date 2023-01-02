@@ -4,6 +4,8 @@ const UserController = require('../controllers/user.controller');
 const ShelterController = require('../controllers/shelter.controller');
 const Op = db.Sequelize.Op;
 
+const bcrypt = require('bcryptjs');
+
 exports._create = async (req) => {
   // Validate request
   if (!req.body.email) {
@@ -16,7 +18,8 @@ exports._create = async (req) => {
   // Create a Profile
   const newProfile = {
     email: req.body.email,
-    password: req.body.password,
+    // password: req.body.password,
+    password: bcrypt.hashSync(req.body.password),
     salt: req.body.salt ? req.body.salt : undefined
   };
 
