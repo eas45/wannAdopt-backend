@@ -8,7 +8,7 @@ exports._create = async (req) => {
   // Validate request
   if (!req.body.email) {
     res.status(400).send({
-      message: "Content can not be empty!"
+      message: "¡El contenido no puede estar vacío!"
     });
     return;
   }
@@ -19,9 +19,6 @@ exports._create = async (req) => {
     password: req.body.password,
     salt: req.body.salt ? req.body.salt : undefined
   };
-
-  console.log("PROFILE:");
-  console.log(newProfile);
 
   try {
     const profile = await Profile.create(newProfile);
@@ -34,7 +31,7 @@ exports._create = async (req) => {
     return {
       status: 500,
       payload: {
-        message: err.message || "Some error occurred while creating the Profile."
+        message: err.message || "Error creando el perfil."
       }
     }
   }
@@ -59,7 +56,7 @@ exports.findAll = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error ocurred while retrieving profiles."
+          err.message || "Error obteniendo los perfiles."
       });
     });
 };
@@ -68,7 +65,7 @@ exports._findOne = async (id) => {
   try {
     var profile = await Profile.findByPk(id);
     const status = profile ? 200 : 404;
-    var payload = profile ? profile : { message: `Cannot find Profile with id=${id}.` };
+    var payload = profile ? profile : { message: `No se encontró el perfil con id=${id}.` };
 
     return {
       status,
@@ -78,7 +75,7 @@ exports._findOne = async (id) => {
     console.log(err.message);
     return {
       status: 500,
-      payload: { message: `Error retrieving Profile with id=${id}.` }
+      payload: { message: `Error obteniendo el perfil con id=${id}.` }
     };
   }
 }
@@ -101,17 +98,17 @@ exports.update = (req, res) => {
     .then(num => {
       if (num == 1) {
         res.send({
-          message: 'Profile was updated successfully.'
+          message: 'Perfil actualizado con éxito.'
         });
       } else {
         res.send({
-          message: `Cannot update Profile with id=${id}. Maybe Profile was not found or req.body is empty!`
+          message: `¡No se ha podido actualizar el perfil con id=${id}! Tal vez el perfil no se encontró o el cuerpo estaba vacío.`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: `Error updating Profile with id=${id}`
+        message: `Error actualizando el perfil con id=${id}`
       });
     });
 };
@@ -126,14 +123,14 @@ exports._delete = async (id) => {
       status: 200,
       payload:
         num == 1 ?
-          { message: 'Profile was deleted successfully.' } :
-          { message: `Cannot delete Profile with id=${id}. Maybe Profile was not found or req.body is empty!` }
+          { message: 'Perfil eliminado con éxitos.' } :
+          { message: `¡No se puede eliminar el perfil con id=${id}! Tal vez el perfil no se encontró o el cuerpo estaba vacío.` }
     }
   } catch (err) {
     return {
       status: 500,
       payload: {
-        message: err.message || `Error deleting Profile with id=${id}`
+        message: err.message || `Error eliminando el perfil con id=${id}`
       }
     }
   }
@@ -185,12 +182,12 @@ exports.deleteAll = (req, res) => {
   })
     .then(num => {
       res.send({
-        message: `${num} Profile(s) were deleted succesfully!`
+        message: `${num} perfil(es) eliminado(s) con éxito`
       });
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || `Error deleting Profile with id=${id}`
+        message: err.message || `Error eliminando el perfil con id=${id}`
       });
     });
 };
@@ -231,7 +228,7 @@ exports.findAllUsers = async (req, res) => {
     .catch(err => {
       res.status(500).send({
         message: err.message ||
-          'Some error ocurred while retrieving all User Profiles'
+          'Error obteniendo los perfiles de los usuarios.'
       });
     });
 };
@@ -247,7 +244,7 @@ exports.findAllShelters = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message: err.message ||
-          'Some error ocurred while retrieving all Shelter Profiles'
+          'Error obteniendo los perfiles de los refugios.'
       });
     });
 };
