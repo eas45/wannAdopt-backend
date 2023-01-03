@@ -14,12 +14,12 @@ const Profile = db.Profile;
 // }
 
 verifyToken = (req, res, next) => {
-  let token = req.session.token;
-  // let token = req.headers['x-access-token'];
+  // let token = req.session.token;
+  let token = req.headers['x-access-token'];
 
   if (!token) {
     return res.status(403).send({
-      message: 'No token provided!'
+      message: '¡La petición ha sido enviada sin token!'
     });
   }
 
