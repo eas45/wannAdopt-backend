@@ -1,10 +1,12 @@
+const { authJwt } = require('../middleware');
+
 module.exports = app => {
   const animals = require('../controllers/animal.controller');
 
   var router = require('express').Router();
 
   // Create a new Animal
-  router.post('/', animals.create);
+  router.post('/', [authJwt.verifyToken], animals.create);
 
   // Retrieve all Animals
   router.get('/', animals.findAll);
