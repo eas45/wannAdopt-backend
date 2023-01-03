@@ -1,7 +1,6 @@
 const db = require('../models');
 const Animal = db.animals;
 const ShelterController = require('../controllers/shelter.controller');
-const Op = db.Sequelize.Op;
 
 // Create and Save a new Animal
 exports.create = async (req, res) => {

@@ -139,7 +139,7 @@ exports._delete = async (id) => {
       status: 200,
       payload:
         num == 1 ?
-          { message: 'Perfil eliminado con éxitos.' } :
+          { message: 'Perfil eliminado con éxito.' } :
           { message: `¡No se puede eliminar el perfil con id=${id}! Tal vez el perfil no se encontró o el cuerpo estaba vacío.` }
     }
   } catch (err) {
