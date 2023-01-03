@@ -21,7 +21,7 @@ exports.login = async (req, res) => {
 
   const email = req.body.email;
   const password = req.body.password;
-  
+
   try {
     const profile = await Profile.findOne({
       where: { email }
@@ -43,15 +43,13 @@ exports.login = async (req, res) => {
       })
     }
 
-    const token = jwt.sign({ id: profile.id }, config.secret, {
-      expiresIn: 86400 // 24 hours
-    });
-
-    req.session.token = token;
-
+    // Create a token
+    const token = jwt.sign({ email },
+      config.secret,
+      { expiresIn: config.jwtExpiration });
+      
     return res.send({
-      id: profile.id,
-      email: profile.email
+      token
     });
   } catch (err) {
     console.log(err.message);
@@ -64,7 +62,6 @@ exports.login = async (req, res) => {
 
 exports.logout = async (req, res) => {
   try {
-    req.session = null;
     return res.send({
       message: 'Sesión cerrada.'
     });
