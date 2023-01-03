@@ -91,6 +91,19 @@ exports.findOne = async (req, res) => {
   res.status(response.status).send(response.payload);
 };
 
+exports.findOneWithAllData = async (req, res) => {
+  const id = req.params.id;
+  const response = await this._findOne(id);
+
+  if (response.status == 200) {
+    const profile = response.payload;
+    const user = await profile.getUser();
+
+    return res.send(user);
+  }
+  return res.status(response.status).send(response.payload);
+}
+
 // Update a Profile by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
