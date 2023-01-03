@@ -1,5 +1,6 @@
 const db = require('../models');
 const User = db.users;
+const Animal = db.animals;
 // const Profile = db.profiles;
 const ProfileController = require('../controllers/profile.controller');
 // const Op = db.Sequelize.Op;
@@ -207,3 +208,35 @@ exports.delete = async (req, res) => {
 //       });
 //     });
 // };
+
+exports.linkWithAnimal = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const response = await this._findOne(id);
+
+    if (response.status == 200) {
+      const user = response.payload;
+      const animalId = req.body.animal;
+      const animal = await Animal.findByPk(animalId);
+
+      if (animal) {
+        await user.addAnimal(animal);
+        return res.send({
+          message: 'Vinculación con el animal correcta.',
+          payload: {
+            user: id,
+            animal: animalId
+          }
+        });
+      }
+      return res.status(400).send({
+        message: `Error obteniendo el animal con id=${animalId}.`
+      });
+    }
+    return res.status(response.status).send(response.payload);
+  } catch (err) {
+    return res.status(500).send({
+      message: 'Error vinculando con el animal.'
+    });
+  }
+};

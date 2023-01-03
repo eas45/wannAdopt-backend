@@ -58,7 +58,7 @@ db.shelters.hasMany(db.animals, {
 db.animals.belongsTo(db.shelters);
 
 // Many To Many (User-Animal)
-db.users.belongsToMany(db.animals, { through: 'animal_users' })
+db.users.belongsToMany(db.animals, { through: 'animal_users' });
 db.animals.belongsToMany(db.users, { through: 'animal_users' });
 
 // One To One (Profile-RefreshToken)
