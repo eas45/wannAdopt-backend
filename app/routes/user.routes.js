@@ -1,3 +1,5 @@
+const { authJwt } = require('../middleware');
+
 module.exports = app => {
   const users = require('../controllers/user.controller');
 
@@ -20,6 +22,8 @@ module.exports = app => {
 
   // // Delete all Users
   // router.delete('/', users.deleteAll);
+
+  router.post('/:id', [authJwt.verifyToken, authJwt.isUser], users.linkWithAnimal);
 
   app.use('/api/users', router);
 }

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config/auth.config');
 const db = require('../models');
-const Profile = db.Profile;
+const Profile = db.profiles;
 
 // const { TokenExpiredError } = jwt;
 
@@ -30,14 +30,20 @@ verifyToken = (req, res, next) => {
       });
       // return catchError(err, res);
     }
-    req.profileId = decoded.id;
+    req.email = decoded.email
     next();
   });
 };
 
 isUser = async (req, res, next) => {
   try {
-    const profile = await Profile.findByPk(req.profileId);
+    console.log(req.email);
+    const profile = await Profile.findOne({
+      where: {
+        email: req.email
+      }
+    });
+    console.log(profile);
     const user = await profile.getUser();
 
     if (user) {
@@ -48,6 +54,7 @@ isUser = async (req, res, next) => {
       message: 'Solo disponible para usuarios.'
     });
   } catch (err) {
+    console.log(err);
     return res.status(500).send({
       message: 'Error validando usuario.'
     });
