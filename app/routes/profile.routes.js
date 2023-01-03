@@ -12,6 +12,8 @@ module.exports = app => {
   // Retrieve all User Profiles
   router.get('/users', profiles.findAllUsers);
 
+  router.get('/users/:id', profiles.findOneWithAllData);
+
   // Retrieve all Shelter Profiles
   router.get('/shelters', profiles.findAllShelters);
 

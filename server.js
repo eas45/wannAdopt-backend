@@ -1,12 +1,16 @@
 const express = require("express");
 const cors = require("cors");
 const db = require("./app/models");
+const cookieSession = require("cookie-session");
 
 const app = express();
 
 var corsOptions = {
   credentials: true,
-  origin: ["http://localhost:4200"]
+  origin: [
+    'http://localhost:4200',
+    'http://localhost:8100'
+  ]
 };
 
 app.use(cors(corsOptions));
@@ -16,6 +20,14 @@ app.use(express.json());
 
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  cookieSession({
+    name: 'profile-session',
+    secret: 'secreto',
+    httpOnly: true
+  })
+)
 
 db.sequelize.sync(/* { force: true } */)
   .then(() => {

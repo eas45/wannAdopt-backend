@@ -4,6 +4,8 @@ const UserController = require('../controllers/user.controller');
 const ShelterController = require('../controllers/shelter.controller');
 const Op = db.Sequelize.Op;
 
+const bcrypt = require('bcryptjs');
+
 exports._create = async (req) => {
   // Validate request
   if (!req.body.email) {
@@ -16,7 +18,8 @@ exports._create = async (req) => {
   // Create a Profile
   const newProfile = {
     email: req.body.email,
-    password: req.body.password,
+    // password: req.body.password,
+    password: bcrypt.hashSync(req.body.password),
     salt: req.body.salt ? req.body.salt : undefined
   };
 
@@ -88,6 +91,19 @@ exports.findOne = async (req, res) => {
   res.status(response.status).send(response.payload);
 };
 
+exports.findOneWithAllData = async (req, res) => {
+  const id = req.params.id;
+  const response = await this._findOne(id);
+
+  if (response.status == 200) {
+    const profile = response.payload;
+    const user = await profile.getUser();
+
+    return res.send(user);
+  }
+  return res.status(response.status).send(response.payload);
+}
+
 // Update a Profile by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
@@ -123,7 +139,7 @@ exports._delete = async (id) => {
       status: 200,
       payload:
         num == 1 ?
-          { message: 'Perfil eliminado con éxitos.' } :
+          { message: 'Perfil eliminado con éxito.' } :
           { message: `¡No se puede eliminar el perfil con id=${id}! Tal vez el perfil no se encontró o el cuerpo estaba vacío.` }
     }
   } catch (err) {

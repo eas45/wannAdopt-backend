@@ -1,20 +1,19 @@
 const db = require('../models');
 const Animal = db.animals;
 const ShelterController = require('../controllers/shelter.controller');
-const Op = db.Sequelize.Op;
 
 // Create and Save a new Animal
 exports.create = async (req, res) => {
   // Validate request
   if (!req.query.shelter) {
     res.status(400).send({
-      message: "Animals must belong to a shelter!"
+      message: "Los animales deben pertenecer a un refugio."
     });
     return;
   }
   if (!req.body.name) {
     res.status(400).send({
-      message: "Content can not be empty!"
+      message: "¡El contenido no puede estar vacío!"
     });
     return;
   }
@@ -45,7 +44,7 @@ exports.create = async (req, res) => {
   } catch (err) {
     res.status(500).send({
       message:
-        err.message || "Some error occurred while creating the Animal."
+        err.message || "Error creando el animal en la base de datos."
     });
   }
   return;
@@ -53,17 +52,14 @@ exports.create = async (req, res) => {
 
 // Retrieve all Animals from the database.
 exports.findAll = (req, res) => {
-  // const name = req.query.name;
-  // var condition = name ? { name: { [Op.like]: `%${name}%` } } : null;
-
-  Animal.findAll(/* { where: condition } */)
+  Animal.findAll()
     .then(data => {
       res.send(data);
     })
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error ocurred while retrieving animals."
+          err.message || "Error obteniendo los animales."
       });
     });
 };
@@ -72,7 +68,7 @@ exports._findOne = async (id) => {
   try {
     var animal = await Animal.findByPk(id);
     const status = animal ? 200 : 404;
-    var payload = animal ? animal : { message: `Cannot find Animal with id=${id}.` };
+    var payload = animal ? animal : { message: `No se encontró el animal con id=${id}.` };
 
     return {
       status,
@@ -82,7 +78,7 @@ exports._findOne = async (id) => {
     console.log(err.message);
     return {
       status: 500,
-      payload: { message: `Error retrieving Animal with id=${id}.` }
+      payload: { message: `Error obteniendo el animal con id=${id}.` }
     };
   }
 }
@@ -105,17 +101,17 @@ exports.update = (req, res) => {
     .then(num => {
       if (num == 1) {
         res.send({
-          message: 'Animal was updated successfully.'
+          message: 'Animal actualizado con éxito.'
         });
       } else {
         res.send({
-          message: `Cannot update Animal with id=${id}. Maybe Animal was not found or req.body is empty!`
+          message: `¡No se ha podido actualizar el animal con id=${id}! Tal vez el animal no se encontró o el cuerpo estaba vacío.`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: `Error updating Animal with id=${id}`
+        message: `Error actualizando el animal con id=${id}`
       });
     });
 };
@@ -130,17 +126,17 @@ exports.delete = (req, res) => {
     .then(num => {
       if (num == 1) {
         res.send({
-          message: 'Animal was deleted successfully.'
+          message: 'Animal eliminado con éxito.'
         });
       } else {
         res.send({
-          message: `Cannot delete Animal with id=${id}. Maybe Animal was not found or req.body is empty!`
+          message: `¡No se ha podido eliminar el animal con id=${id}! Tal vez el animal no se encontró o el cuerpo estaba vacío.`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: `Error deleting Animal with id=${id}`
+        message: `Error eliminando el animal con id=${id}`
       });
     });
 };
@@ -153,44 +149,12 @@ exports.deleteAll = (req, res) => {
   })
     .then(num => {
       res.send({
-        message: `${num} Animal(s) were deleted succesfully!`
+        message: `${num} animal(es) eliminado(s) con éxito`
       });
     })
     .catch(err => {
       res.status(500).send({
-        message: err.message || `Error deleting Animal with id=${id}`
+        message: err.message || `Error eliminando el animal con id=${id}`
       });
     });
 };
-
-// // Find all user Animals
-// exports.findAllUsers = (req, res) => {
-//   Animal.findAll({
-//     include: ['user']
-//   })
-//     .then(data => {
-//       res.send(data.filter(d => d.user));
-//     })
-//     .catch(err => {
-//       res.status(500).send({
-//         message: err.message ||
-//           'Some error ocurred while retrieving all User Animals'
-//       });
-//     });
-// };
-
-// // Find all shelter Animals
-// exports.findAllShelters = (req, res) => {
-//   Animal.findAll({
-//     include: ['shelter']
-//   })
-//     .then(data => {
-//       res.send(data.filter(d => d.shelter));
-//     })
-//     .catch(err => {
-//       res.status(500).send({
-//         message: err.message ||
-//           'Some error ocurred while retrieving all Shelter Animals'
-//       });
-//     });
-// };
