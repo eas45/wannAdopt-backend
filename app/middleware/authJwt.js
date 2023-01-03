@@ -3,8 +3,19 @@ const config = require('../config/auth.config');
 const db = require('../models');
 const Profile = db.Profile;
 
+// const { TokenExpiredError } = jwt;
+
+// const catchError = (err, res) => {
+//   if (err instanceof TokenExpiredError) {
+//     return res.status(401).send({ message: 'La sesión ha expirado.' })
+//   }
+
+//   return res.status(401).send({ message: "No autorizado" });
+// }
+
 verifyToken = (req, res, next) => {
   let token = req.session.token;
+  // let token = req.headers['x-access-token'];
 
   if (!token) {
     return res.status(403).send({
@@ -17,6 +28,7 @@ verifyToken = (req, res, next) => {
       return res.status(401).send({
         message: '¡No autorizado!'
       });
+      // return catchError(err, res);
     }
     req.profileId = decoded.id;
     next();
