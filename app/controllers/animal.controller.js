@@ -2,6 +2,21 @@ const db = require('../models');
 const Animal = db.animals;
 const ShelterController = require('../controllers/shelter.controller');
 
+const getPagination = (page, size) => {
+  const limit = size ? +size : 3;
+  const offset = page ? page * limit : 0;
+
+  return { limit, offset };
+}
+
+const getPagingData = (data, page, limit) => {
+  const { count: totalItems, rows: animals } = data;
+  const currentPage = page ? +page : 0;
+  const totalPages = Math.ceil(totalItems / limit);
+
+  return { totalItems, animals, totalPages, currentPage };
+}
+
 // Create and Save a new Animal
 exports.create = async (req, res) => {
   // Validate request
@@ -52,9 +67,13 @@ exports.create = async (req, res) => {
 
 // Retrieve all Animals from the database.
 exports.findAll = (req, res) => {
-  Animal.findAll()
+  const { page, size } = req.query;
+  const { limit, offset } = getPagination(page, size);
+
+  Animal.findAndCountAll({ limit, offset })
     .then(data => {
-      res.send(data);
+      const response = getPagingData(data, page, limit);
+      res.send(response);
     })
     .catch(err => {
       res.status(500).send({
