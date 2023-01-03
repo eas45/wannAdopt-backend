@@ -23,6 +23,7 @@ db.profiles = require('./profile.model')(sequelize, Sequelize);
 db.users = require('./user.model')(sequelize, Sequelize);
 db.shelters = require('./shelter.model')(sequelize, Sequelize);
 db.animals = require('./animal.model')(sequelize, Sequelize);
+// db.refreshToken = require('./refreshToken.model')(sequelize, Sequelize);
 
 // One To One (Profile-User)
 db.profiles.hasOne(db.users, {
@@ -59,5 +60,15 @@ db.animals.belongsTo(db.shelters);
 // Many To Many (User-Animal)
 db.users.belongsToMany(db.animals, { through: 'animal_users' })
 db.animals.belongsToMany(db.users, { through: 'animal_users' });
+
+// One To One (Profile-RefreshToken)
+// db.profiles.hasOne(db.refreshToken, {
+//   foreignKey: {
+//     allowNull: false
+//   },
+//   onDelete: 'CASCADE',
+//   onUpdate: 'CASCADE'
+// });
+// db.refreshToken.belongsTo(db.profiles);
 
 module.exports = db;
