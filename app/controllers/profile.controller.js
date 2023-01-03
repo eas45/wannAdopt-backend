@@ -91,7 +91,7 @@ exports.findOne = async (req, res) => {
   res.status(response.status).send(response.payload);
 };
 
-exports.findOneWithAllData = async (req, res) => {
+exports.findUser = async (req, res) => {
   const id = req.params.id;
   const response = await this._findOne(id);
 

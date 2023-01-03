@@ -44,9 +44,11 @@ exports.login = async (req, res) => {
     }
 
     // Create a token
-    const token = jwt.sign({ email },
-      config.secret,
-      { expiresIn: config.jwtExpiration });
+    const token = jwt.sign({ 
+      profileId: profile.id,
+      email },
+      config.secret/* ,
+      { expiresIn: config.jwtExpiration } */);
       
     return res.send({
       token
