@@ -1,4 +1,5 @@
 const express = require("express");
+const morgan = require("morgan");
 const cors = require("cors");
 const db = require("./app/models");
 const cookieSession = require("cookie-session");
@@ -7,6 +8,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
+morgan('tiny');
 
 var corsOptions = {
   credentials: true,
