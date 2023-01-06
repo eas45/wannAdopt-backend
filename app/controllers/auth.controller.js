@@ -1,7 +1,7 @@
 const db = require('../models');
 const Profile = db.profiles;
 const ProfileController = require('../controllers/profile.controller');
-const config = require('../config/auth.config');
+const authConfig = require('../config/auth.config');
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -12,47 +12,52 @@ exports.register = async (req, res) => {
   return res.status(profileResponse.status).send({ email: profileResponse.payload.email });
 };
 
+// Create a token
+newToken = (id, rol) => {
+  const token = jwt.sign(
+    {
+      id, // User or Shelter ID
+      rol
+    },
+    authConfig.secret,
+    // { expiresIn: authConfig.jwtExpiration }
+  );
+
+  return token;
+}
+
 exports.login = async (req, res) => {
-  if (!req.body.email) {
+  const { email, password } = req.body;
+
+  if (!(email && password)) {
     return res.status(400).send({
       message: 'Se necesita el usuario y la contraseña para poder iniciar sesión.'
     });
   }
-
-  const email = req.body.email;
-  const password = req.body.password;
 
   try {
     const profile = await Profile.findOne({
       where: { email }
     });
 
-    if (!profile) {
-      return res.status(404).send({
-        message: 'Correo electrónico no encontrado.'
-      });
+    if (profile) {
+      const passwordIsValid = bcrypt.compareSync(
+        password, profile.password
+      );
+
+      if (passwordIsValid) {
+        const dataAccount = await ProfileController._findAccountByEmail(email);
+        console.log(dataAccount);
+        const token = newToken(dataAccount.data.id, dataAccount.rol);
+
+        return res.send({ token });
+      }
     }
 
-    const passwordIsValid = bcrypt.compareSync(
-      password, profile.password
-    );
-
-    if (!passwordIsValid) {
-      return res.status(401).send({
-        message: 'Contraseña incorrecta.'
-      })
-    }
-
-    // Create a token
-    const token = jwt.sign({ 
-      profileId: profile.id,
-      email },
-      config.secret/* ,
-      { expiresIn: config.jwtExpiration } */);
-      
-    return res.send({
-      token
+    return res.status(404).send({
+      message: 'Credenciales incorrectas.'
     });
+
   } catch (err) {
     console.log(err.message);
 
