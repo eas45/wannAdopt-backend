@@ -266,7 +266,7 @@ exports.findAllShelters = (req, res) => {
 };
 
 // Returns User or Shelter data
-exports._findAccountByEmail = async (email) => {
+exports.getAccountAndRoleByEmail = async (email) => {
   try {
     const profile = await Profile.findOne({
       where: { email }
@@ -274,16 +274,16 @@ exports._findAccountByEmail = async (email) => {
 
     if (profile) {
       let data = await profile.getUser();
-      let rol = '';
+      let role = '';
 
       if (data) {
-        rol = 'user';
+        role = 'user';
       } else {
         data = await profile.getShelter();
-        rol = 'shelter';
+        role = 'shelter';
       }
 
-      return { data, rol };
+      return { data, role };
     }
   } catch (err) {
     console.log(err);

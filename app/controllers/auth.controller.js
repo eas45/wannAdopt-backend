@@ -13,11 +13,12 @@ exports.register = async (req, res) => {
 };
 
 // Create a token
-newToken = (id, rol) => {
+// newToken = (id, role) => {
+function newToken(id, role) {
   const token = jwt.sign(
     {
       id, // User or Shelter ID
-      rol
+      role
     },
     authConfig.secret,
     // { expiresIn: authConfig.jwtExpiration }
@@ -46,9 +47,9 @@ exports.login = async (req, res) => {
       );
 
       if (passwordIsValid) {
-        const dataAccount = await ProfileController._findAccountByEmail(email);
+        const dataAccount = await ProfileController.getAccountAndRoleByEmail(email);
         console.log(dataAccount);
-        const token = newToken(dataAccount.data.id, dataAccount.rol);
+        const token = newToken(dataAccount.data.id, dataAccount.role);
 
         return res.send({ token });
       }
