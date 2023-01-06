@@ -10,13 +10,13 @@ module.exports = app => {
   router.get('/', shelters.findAll);
 
   // Retrieve a single Shelter with id
-  router.get('/:id', shelters.findOne);
+  router.get('/:id', [authJwt.verifyToken, authJwt.isShelter], shelters.findOne);
 
   // Update a Shelter with id
-  router.put('/:id', shelters.update);
+  router.put('/:id', [authJwt.verifyToken, authJwt.isShelter], shelters.update);
 
   // Delete a Shelter with id
-  router.delete('/:id', shelters.delete);
+  router.delete('/:id', [authJwt.verifyToken, authJwt.isShelter],shelters.delete);
 
   // // Delete all Shelters
   // router.delete('/', shelters.deleteAll);
