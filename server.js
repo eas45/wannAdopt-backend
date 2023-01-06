@@ -1,6 +1,6 @@
 const express = require("express");
-const morgan = require("morgan");
 const cors = require("cors");
+const morgan = require("morgan");
 const db = require("./app/models");
 const cookieSession = require("cookie-session");
 
@@ -8,7 +8,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-morgan('tiny');
 
 var corsOptions = {
   credentials: true,
@@ -19,6 +18,7 @@ var corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(morgan('tiny'));
 
 // parse requests of content-type - application/json
 app.use(express.json());
