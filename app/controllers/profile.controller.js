@@ -7,12 +7,18 @@ const Op = db.Sequelize.Op;
 const bcrypt = require('bcryptjs');
 
 exports._create = async (req) => {
+  const { email, password, role } = req.body;
+
   // Validate request
-  if (!req.body.email) {
-    res.status(400).send({
-      message: "¡El contenido no puede estar vacío!"
-    });
-    return;
+  if (!(email && password &&
+    (role == 'user' || role == 'shelter'))) {
+    return {
+      status: 400,
+      payload: {
+        message: "¡Petición mal formada!",
+        data: req.body
+      }
+    };
   }
 
   // Create a Profile
@@ -24,7 +30,16 @@ exports._create = async (req) => {
   };
 
   try {
-    const profile = await Profile.create(newProfile);
+    let profile = await Profile.create(newProfile);
+    const { id } = profile;
+
+    if (role == 'user') {
+      await profile.createUser();
+    } else if (role == 'shelter') {
+      await profile.createShelter();
+    }
+
+    profile = await Profile.findByPk(id, { include: [role] });
 
     return {
       status: 200,

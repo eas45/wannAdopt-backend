@@ -9,7 +9,7 @@ const bcrypt = require('bcryptjs');
 exports.register = async (req, res) => {
   const profileResponse = await ProfileController._create(req);
 
-  return res.status(profileResponse.status).send({ email: profileResponse.payload.email });
+  return res.status(profileResponse.status).send(profileResponse.payload);
 };
 
 // Create a token

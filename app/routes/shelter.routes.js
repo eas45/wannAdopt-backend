@@ -1,3 +1,5 @@
+const authJwt = require('../middleware/authJwt');
+
 module.exports = app => {
   const shelters = require('../controllers/shelter.controller');
 
