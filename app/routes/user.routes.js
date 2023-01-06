@@ -12,13 +12,13 @@ module.exports = app => {
   router.get('/', users.findAll);
 
   // Retrieve a single User with id
-  router.get('/:id', users.findOne);
+  router.get('/:id', [authJwt.verifyToken, authJwt.isUser], users.findOne);
 
   // Update a User with id
-  router.put('/:id', users.update);
+  router.put('/:id', [authJwt.verifyToken, authJwt.isUser], users.update);
 
   // Delete a User with id
-  router.delete('/:id', users.delete);
+  router.delete('/:id', [authJwt.verifyToken, authJwt.isUser], users.delete);
 
   // // Delete all Users
   // router.delete('/', users.deleteAll);

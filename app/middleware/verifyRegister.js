@@ -18,7 +18,7 @@ checkDuplicateEmail = async (req, res, next) => {
   } catch (err) {
     console.log(err);
     return res.status(500).send({
-      message: 'Error al validar el correo electrónico.'
+      message: 'Error comprobando correo electrónico.'
     });
   }
 }

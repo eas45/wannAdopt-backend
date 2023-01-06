@@ -264,3 +264,29 @@ exports.findAllShelters = (req, res) => {
       });
     });
 };
+
+// Returns User or Shelter data
+exports.getAccountAndRoleByEmail = async (email) => {
+  try {
+    const profile = await Profile.findOne({
+      where: { email }
+    });
+
+    if (profile) {
+      let data = await profile.getUser();
+      let role = '';
+
+      if (data) {
+        role = 'user';
+      } else {
+        data = await profile.getShelter();
+        role = 'shelter';
+      }
+
+      return { data, role };
+    }
+  } catch (err) {
+    console.log(err);
+    return null;
+  }
+}

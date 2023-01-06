@@ -14,70 +14,44 @@ const Profile = db.profiles;
 // }
 
 verifyToken = (req, res, next) => {
-  // let token = req.session.token;
-  let token = req.headers['x-access-token'];
+  let token = req.headers['authorization'].split(' ')[1];
 
   if (!token) {
     return res.status(403).send({
       message: '¡La petición ha sido enviada sin token!'
     });
   }
-
+  
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
+      console.log(err);
       return res.status(401).send({
-        message: '¡No autorizado!'
+        token,
+        message: '¡Token no autorizado!'
       });
       // return catchError(err, res);
     }
-    req.email = decoded.email
+    req.accountId = decoded.id;
+    req.role = decoded.role;
+    console.log(`VERIFICADO: ${req.role} con id=${req.accountId}`);
     next();
   });
 };
 
 isUser = async (req, res, next) => {
-  try {
-    console.log(req.email);
-    const profile = await Profile.findOne({
-      where: {
-        email: req.email
-      }
-    });
-    console.log(profile);
-    const user = await profile.getUser();
-
-    if (user) {
-      return next();
-    }
-
-    return res.status(403).send({
-      message: 'Solo disponible para usuarios.'
-    });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).send({
-      message: 'Error validando usuario.'
-    });
-  }
+  return req.role == 'user' ?
+  next() :
+  res.status(403).send({
+    message: 'Cuenta sin privilegios requeridos.'
+  });
 }
 
 isShelter = async (req, res, next) => {
-  try {
-    const profile = await Profile.findByPk(req.profileId);
-    const shelter = await profile.getShelter();
-
-    if (shelter) {
-      return next();
-    }
-
-    return res.status(403).send({
-      message: 'Solo disponible para refugios.'
-    });
-  } catch (err) {
-    return res.status(500).send({
-      message: 'Error validando refugio.'
-    });
-  }
+  return req.role == 'shelter' ?
+  next() :
+  res.status(403).send({
+    message: 'Cuenta sin privilegios requeridos.'
+  });
 }
 
 const authJwt = {
