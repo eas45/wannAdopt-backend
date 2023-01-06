@@ -3,6 +3,9 @@ const cors = require("cors");
 const db = require("./app/models");
 const cookieSession = require("cookie-session");
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 const app = express();
 
 var corsOptions = {
@@ -24,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
   cookieSession({
     name: 'profile-session',
-    secret: 'secreto',
+    secret: process.env.COOKIE_SECRET,
     httpOnly: true
   })
 )
