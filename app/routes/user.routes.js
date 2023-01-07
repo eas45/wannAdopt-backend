@@ -8,8 +8,12 @@ module.exports = app => {
   // Create a new User
   router.post('/', users.create);
 
+  router.post('/animals/:id', [authJwt.verifyToken, authJwt.isUser], users.linkWithAnimal);
+
   // Retrieve all Users
   router.get('/', users.findAll);
+
+  router.get('/animals', [authJwt.verifyToken, authJwt.isUser], users.findAllAnimals);
 
   // Retrieve a single User with id
   router.get('/:id', [authJwt.verifyToken, authJwt.isUser], users.findOne);
@@ -22,8 +26,6 @@ module.exports = app => {
 
   // // Delete all Users
   // router.delete('/', users.deleteAll);
-
-  router.post('/animals/:id', [authJwt.verifyToken, authJwt.isUser], users.linkWithAnimal);
 
   app.use('/api/users', router);
 }

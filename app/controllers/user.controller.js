@@ -1,9 +1,9 @@
 const db = require('../models');
 const User = db.users;
-// const Animal = db.animals;
 // const Profile = db.profiles;
 const ProfileController = require('../controllers/profile.controller');
 const AnimalController = require('../controllers/animal.controller');
+const AnimalUsers = db.animal_users;
 // const Op = db.Sequelize.Op;
 
 // Create and Save a new User
@@ -215,14 +215,14 @@ exports.linkWithAnimal = async (req, res) => {
     const response = await this._findOne(req.accountId);
 
     if (response.status == 200) {
-      const {payload: user} = response;
-      const {id: animalId} = req.params;
+      const { payload: user } = response;
+      const { id: animalId } = req.params;
       const animalResponse = await AnimalController._findOne(animalId);
 
       // console.log(animalResponse);
 
       if (animalResponse.status == 200) {
-        const {payload: animal} = animalResponse;
+        const { payload: animal } = animalResponse;
         console.log(animal)
         await user.addAnimal(animal);
 
@@ -245,3 +245,10 @@ exports.linkWithAnimal = async (req, res) => {
     });
   }
 };
+
+exports.findAllAnimals = async (req, res) => {
+  const user = await User.findByPk(req.accountId);
+  const animals = await user.getAnimals();
+
+  res.send(animals);
+}
