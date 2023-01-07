@@ -18,7 +18,7 @@ module.exports = app => {
   router.put('/:id', [authJwt.verifyToken, authJwt.isShelter], shelters.update);
 
   // Delete a Shelter with id
-  router.delete('/:id', [authJwt.verifyToken, authJwt.isShelter],shelters.delete);
+  router.delete('/:id', [authJwt.verifyToken, authJwt.isShelter], shelters.delete);
 
   // // Delete all Shelters
   // router.delete('/', shelters.deleteAll);

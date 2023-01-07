@@ -10,6 +10,9 @@ module.exports = app => {
 
   // Retrieve all Animals
   router.get('/', animals.findAll);
+  
+  // Retrieve shelter animals
+  router.get('/shelter', [authJwt.verifyToken, authJwt.isShelter], animals.findAllByShelter);
 
   // Retrieve a single Animal with id
   router.get('/:id', animals.findOne);

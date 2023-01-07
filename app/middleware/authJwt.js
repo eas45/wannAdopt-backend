@@ -14,14 +14,16 @@ const Profile = db.profiles;
 // }
 
 verifyToken = (req, res, next) => {
-  let token = req.headers['authorization'].split(' ')[1];
+  let token = req.headers['authorization']
+    ? req.headers['authorization'].split(' ')[1]
+    : null;
 
   if (!token) {
     return res.status(403).send({
       message: '¡La petición ha sido enviada sin token!'
     });
   }
-  
+
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
       console.log(err);
@@ -40,18 +42,18 @@ verifyToken = (req, res, next) => {
 
 isUser = async (req, res, next) => {
   return req.role == 'user' ?
-  next() :
-  res.status(403).send({
-    message: 'Cuenta sin privilegios requeridos.'
-  });
+    next() :
+    res.status(403).send({
+      message: 'Cuenta sin privilegios requeridos.'
+    });
 }
 
 isShelter = async (req, res, next) => {
   return req.role == 'shelter' ?
-  next() :
-  res.status(403).send({
-    message: 'Cuenta sin privilegios requeridos.'
-  });
+    next() :
+    res.status(403).send({
+      message: 'Cuenta sin privilegios requeridos.'
+    });
 }
 
 const authJwt = {

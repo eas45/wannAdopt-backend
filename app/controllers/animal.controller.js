@@ -9,12 +9,12 @@ const getPagination = (page, size) => {
   return { limit, offset };
 }
 
-const getPagingData = (data, page, limit) => {
-  const { count: totalItems, rows: animals } = data;
+const getPagingData = (result, page, limit) => {
+  const { count: totalItems, rows: data } = result;
   const currentPage = page ? +page : 0;
   const totalPages = Math.ceil(totalItems / limit);
 
-  return { totalItems, animals, totalPages, currentPage };
+  return { totalItems, animals: data, totalPages, currentPage };
 }
 
 // Create and Save a new Animal
@@ -177,3 +177,23 @@ exports.deleteAll = (req, res) => {
       });
     });
 };
+
+exports.findAllByShelter = async (req, res) => {
+  try {
+    const { page, size } = req.query;
+    const { limit, offset } = getPagination(page, size);
+
+    const animals = await Animal.findAndCountAll({
+      where: { shelterId: req.accountId },
+      limit,
+      offset
+    });
+    const response = getPagingData(animals, offset, limit);
+
+    return res.send(response);
+  } catch (err) {
+    res.status(500).send({
+      message: err.message || `Error encontrando los animales del refugio.`
+    });
+  }
+}
