@@ -23,7 +23,7 @@ module.exports = app => {
   // // Delete all Users
   // router.delete('/', users.deleteAll);
 
-  router.post('/:id', [authJwt.verifyToken, authJwt.isUser], users.linkWithAnimal);
+  router.post('/animals/:id', [authJwt.verifyToken, authJwt.isUser], users.linkWithAnimal);
 
   app.use('/api/users', router);
 }
