@@ -14,6 +14,8 @@ module.exports = app => {
   // Retrieve shelter animals
   router.get('/shelter', [authJwt.verifyToken, authJwt.isShelter], animals.findAllByShelter);
 
+  router.get('/:id/requests', [authJwt.verifyToken, authJwt.isShelter], animals.findAnimalResquests);
+
   // Retrieve a single Animal with id
   router.get('/:id', animals.findOne);
 

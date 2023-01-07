@@ -197,3 +197,18 @@ exports.findAllByShelter = async (req, res) => {
     });
   }
 }
+
+exports.findAnimalResquests = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const animal = await Animal.findByPk(id);
+    const requests = await animal.getUsers();
+
+    return res.send(requests);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      message: `Error buscando peticiones para el animal con id=${id}`
+    });
+  }
+}
