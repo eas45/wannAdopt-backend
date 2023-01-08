@@ -1,5 +1,6 @@
 const db = require('../models');
 const Animal = db.animals;
+const Animal_Users = db.animal_users;
 const ShelterController = require('../controllers/shelter.controller');
 
 const getPagination = (page, size) => {
@@ -209,6 +210,34 @@ exports.findAnimalResquests = async (req, res) => {
     console.log(err);
     return res.status(500).send({
       message: `Error buscando peticiones para el animal con id=${id}`
+    });
+  }
+}
+
+exports.reviewRequest = async (req, res) => {
+  try {
+    const { id: animalId } = req.params;
+    const { userId } = req.body;
+    const { status } = req.query;
+
+    const n = await Animal_Users.update({ status }, {
+      where: {
+        userId,
+        animalId
+      }
+    });
+
+    if (n == 1) {
+      return res.send({
+        message: '¡Petición revisada!'
+      });
+    }
+
+    return res.send('No se ha podido revisar la petición en la base de datos.')
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send({
+      message: 'Error revisando petición'
     });
   }
 }

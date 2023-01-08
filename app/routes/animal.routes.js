@@ -8,6 +8,8 @@ module.exports = app => {
   // Create a new Animal
   router.post('/', [authJwt.verifyToken], animals.create);
 
+  router.post('/:id/requests', [authJwt.verifyToken, authJwt.isShelter], animals.reviewRequest);
+
   // Retrieve all Animals
   router.get('/', animals.findAll);
   
